@@ -4,9 +4,8 @@ import com.dannyhromau.task.manager.core.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +16,17 @@ public class User extends BaseEntity {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    private List<Task> issuedTaskList;
+    @OneToMany(mappedBy = "executor", fetch = FetchType.LAZY)
+    private List<Task> receivedTaskList;
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    private List<Comment> commentList;
+    public User() {
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

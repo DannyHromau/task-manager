@@ -4,15 +4,13 @@ import com.dannyhromau.task.manager.core.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "usr")
+@Table(name = "comment")
 public class Comment extends BaseEntity {
     @Column(name = "value", nullable = false)
     private String value;
@@ -20,4 +18,11 @@ public class Comment extends BaseEntity {
     private UUID authorId;
     @Column(name = "task_id", nullable = false)
     private UUID taskId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
+    private User author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", insertable = false, updatable = false)
+    private Task task;
+
 }

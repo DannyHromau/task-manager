@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,7 +30,14 @@ public class Task extends BaseEntity {
     private UUID executor_id;
     @Column(name = "created_on", nullable = false)
     private ZonedDateTime createdOn;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
+    private User author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "executor_id", insertable = false, updatable = false)
+    private User executor;
+    @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+    private List<Comment> commentList;
 
     public enum Status {
         AWAITING, IN_PROGRESS, COMPLETED

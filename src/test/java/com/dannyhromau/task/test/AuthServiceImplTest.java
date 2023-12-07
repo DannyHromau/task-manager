@@ -53,19 +53,26 @@ public class AuthServiceImplTest {
     private SecurityConfig securityConfig;
     @Autowired
     private JwtDecoder decoder;
+    private User user;
+    private User authUser;
 
     @BeforeEach
     public void setup() {
-       authService = new AuthServiceImpl(userService, avConfig, provider, securityConfig, encoder);
+        authService = new AuthServiceImpl(userService, avConfig, provider, securityConfig, encoder);
+        user = new User();
+        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
+        user.setEmail("usermyser@mail.com");
+        user.setPassword("aaaaaaaa");
+        authUser = new User();
+        authUser.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
+        authUser.setPassword(encoder.encode("aaaaaaaa"));
+        authUser.setEmail("usermyser@mail.com");
     }
 
     @Test
     @DisplayName("register user when wrong password format and correct email")
     void registerUserWhenInvalidPassword() {
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
         user.setPassword("Qa");
-        user.setEmail("usermyser@mail.com");
         when(avConfig.getEmailPattern()).thenReturn(null);
         when(avConfig.getPasswordPattern()).thenReturn(null);
         Exception exception = assertThrows(InvalidDataException.class, () ->
@@ -78,9 +85,6 @@ public class AuthServiceImplTest {
     @Test
     @DisplayName("register user when wrong email format and correct password")
     void registerUserWhenInvalidEmail() {
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        user.setPassword("aaaaaaaa");
         user.setEmail("usermyser#mail.com");
         when(avConfig.getEmailPattern()).thenReturn(null);
         when(avConfig.getPasswordPattern()).thenReturn(null);
@@ -94,14 +98,6 @@ public class AuthServiceImplTest {
     @Test
     @DisplayName("authorize user with correct credentials")
     void authUserWhenValidCredentials() {
-        User authUser = new User();
-        authUser.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        authUser.setPassword(encoder.encode("aaaaaaaa"));
-        authUser.setEmail("usermyser@mail.com");
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        user.setPassword("aaaaaaaa");
-        user.setEmail("usermyser@mail.com");
         when(userService.getEntityByEmail(authUser.getEmail())).thenReturn(authUser);
         JwToken actualToken = authService.authorize(user);
         Jwt jwt = decoder.decode(actualToken.getAccessToken());
@@ -112,14 +108,7 @@ public class AuthServiceImplTest {
     @Test
     @DisplayName("authorize user with incorrect password")
     void authUserWhenInValidPassword() {
-        User authUser = new User();
-        authUser.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        authUser.setPassword(encoder.encode("aaaaaaaa"));
-        authUser.setEmail("usermyser@mail.com");
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
         user.setPassword("bbbbbb");
-        user.setEmail("usermyser@mail.com");
         when(userService.getEntityByEmail(authUser.getEmail())).thenReturn(authUser);
         Exception exception = assertThrows(UnAuthorizedException.class, () ->
                 authService.authorize(user));
@@ -129,15 +118,8 @@ public class AuthServiceImplTest {
     }
 
     @Test
-    @DisplayName("authorize user with incorrect email")
-    void authUserWhenInValidEmail() {
-        User authUser = new User();
-        authUser.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        authUser.setPassword(encoder.encode("aaaaaaaa"));
-        authUser.setEmail("usermyser@mail.com");
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        user.setPassword("aaaaaaaa");
+    @DisplayName("authorize user with wrong email")
+    void authUserWhenWrongEmail() {
         user.setEmail("usermyser@mail.ru");
         when(userService.getEntityByEmail(authUser.getEmail())).thenReturn(authUser);
         Exception exception = assertThrows(UnAuthorizedException.class, () ->
@@ -146,13 +128,10 @@ public class AuthServiceImplTest {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
     @Test
     @DisplayName("refresh with valid token")
     void refreshWhenValidToken() {
-        User authUser = new User();
-        authUser.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        authUser.setPassword(encoder.encode("aaaaaaaa"));
-        authUser.setEmail("usermyser@mail.com");
         String accessToken = provider.createToken(authUser.getId(), authUser.getEmail());
         String refreshToken = provider.refreshToken(authUser.getId());
         JwToken token = new JwToken(accessToken, refreshToken);
@@ -161,13 +140,10 @@ public class AuthServiceImplTest {
         UUID actualId = UUID.fromString((String) decoder.decode(actualToken.getRefreshToken()).getClaims().get("id"));
         assertTrue(actualId.equals(authUser.getId()));
     }
+
     @Test
     @DisplayName("refresh with invalid token")
     void refreshWhenInValidToken() {
-        User user = new User();
-        user.setId(UUID.fromString("d164f0fc-93f8-11ee-b9d1-0242ac120002"));
-        user.setPassword(encoder.encode("aaaaaaaa"));
-        user.setEmail("usermyser@mail.com");
         String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImQxNjRmMGZjLTkzZjgtMTFlZS1iOWQxLTAyNDJhYzEyMDAwMiIsImV4cCI6MTcwMTg1OTM4NCwiZW1haWwiOiJ1c2VybXlzZXJAbWFpbC5jb20ifQ.KQdCjcNocfGrmB0OkCAzZbmkuZIw4O894W-wUu3IjrA";
         String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDE4NjkyODQsImlkIjoiZDE2NGYwZmMtOTNmOC0xMWVlLWI5ZDEtMDI0MmFjMTIwMDAyIn0.YzQd-Orr-ysZhxWWm5EbXztk-F1msnZ0RJXW_NgiOc8";
         JwToken token = new JwToken(accessToken, refreshToken);

@@ -1,6 +1,6 @@
 package com.dannyhromau.task.manager.service.impl;
 
-import com.dannyhromau.task.manager.core.config.ErrorMessages;
+import com.dannyhromau.task.manager.core.util.ErrorMessages;
 import com.dannyhromau.task.manager.core.security.config.AuthValidationConfig;
 import com.dannyhromau.task.manager.core.security.config.SecurityConfig;
 import com.dannyhromau.task.manager.core.security.jwt.JwToken;

@@ -15,4 +15,5 @@ public interface BaseService<Entity extends BaseEntity> {
     UUID deleteEntity(UUID id);
 
     Entity updateEntity(Entity entity);
+
 }

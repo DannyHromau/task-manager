@@ -1,9 +1,11 @@
 package com.dannyhromau.task.manager.core.advice;
 
 import com.dannyhromau.task.manager.api.dto.ErrorMessageDto;
-import com.dannyhromau.task.manager.core.config.ErrorMessages;
+import com.dannyhromau.task.manager.core.util.ErrorMessages;
 import com.dannyhromau.task.manager.exception.EntityNotfoundException;
+import com.dannyhromau.task.manager.exception.ForbiddenException;
 import com.dannyhromau.task.manager.exception.InvalidDataException;
+import com.dannyhromau.task.manager.exception.UnAuthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,21 +35,21 @@ public class RestExceptionHandler {
                 .body(new ErrorMessageDto(ErrorMessages.INCORRECT_DATA_MESSAGE.label));
     }
 
-//    @ExceptionHandler({Exception.class})
-//    protected ResponseEntity<ErrorMessageDto> conflictHandler(Exception e) {
-//        log.error(e.getMessage());
-//        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//    }
-
     @ExceptionHandler({SQLException.class})
     protected ResponseEntity<ErrorMessageDto> dbProblemsHandler(Exception e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
     }
 
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({UnAuthorizedException.class})
     protected ResponseEntity<ErrorMessageDto> unauthorizedHandler(Exception e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @ExceptionHandler({ForbiddenException.class})
+    protected ResponseEntity<ErrorMessageDto> forbiddenHandler(Exception e) {
+        log.error(e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }
