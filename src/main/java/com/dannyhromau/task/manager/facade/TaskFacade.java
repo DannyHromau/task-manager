@@ -22,4 +22,8 @@ public interface TaskFacade extends BaseFacade<TaskDto> {
 
     @Override
     TaskDto updateDto(TaskDto dto);
+
+    List<TaskDto> getTasksByAuthorId(Pageable page, UUID authorId);
+
+    List<TaskDto> getTasksByExecutorId(Pageable page, UUID executorId);
 }

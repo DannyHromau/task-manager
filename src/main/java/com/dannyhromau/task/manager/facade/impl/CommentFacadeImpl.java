@@ -41,6 +41,16 @@ public class CommentFacadeImpl implements CommentFacade {
     }
 
     @Override
+    public List<CommentDto> getCommentsByAuthorId(Pageable pageable, UUID authorId) {
+        return commentMapper.mapToListCommentDto(commentService.getEntitiesByAuthorId(pageable, authorId));
+    }
+
+    @Override
+    public List<CommentDto> getCommentsByTaskId(Pageable pageable, UUID taskId) {
+        return commentMapper.mapToListCommentDto(commentService.getEntitiesByTaskId(pageable, taskId));
+    }
+
+    @Override
     public CommentDto updateDto(CommentDto dto) {
         Comment comment = commentService.getEntityById(dto.getId());
         commentMapper.updateCommentFromDto(dto, comment);

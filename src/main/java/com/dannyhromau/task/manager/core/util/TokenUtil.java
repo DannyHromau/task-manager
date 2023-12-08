@@ -13,6 +13,7 @@ import java.util.UUID;
 @Component
 public class TokenUtil {
     private static final String WRONG_AUTHENTICATION_MESSAGE = ErrorMessages.WRONG_AUTHENTICATION_MESSAGE.label;
+
     public UserDetails getUserDetails() {
         Optional<Jwt> jwtOpt = getJwtToken();
         UserDetails userDetails = new UserDetails();
@@ -29,7 +30,7 @@ public class TokenUtil {
         return token == null ? Optional.empty() : Optional.of(token);
     }
 
-    public static Authentication getAuthentication(){
+    public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 

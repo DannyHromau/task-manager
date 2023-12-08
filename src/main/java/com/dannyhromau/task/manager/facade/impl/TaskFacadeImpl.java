@@ -20,7 +20,6 @@ public class TaskFacadeImpl implements TaskFacade {
 
     private final TaskService taskService;
     private final TaskMapper taskMapper;
-    private static final String NULLABLE_ID_MESSAGE = ErrorMessages.NULLABLE_ID_MESSAGE.label;
 
     @Override
     public List<TaskDto> getDtos(Pageable pageable) {
@@ -48,5 +47,15 @@ public class TaskFacadeImpl implements TaskFacade {
         Task task = taskService.getEntityById(dto.getId());
         taskMapper.updateTaskFromDto(dto, task);
         return taskMapper.mapToTaskDto(task);
+    }
+
+    @Override
+    public List<TaskDto> getTasksByAuthorId(Pageable page, UUID authorId) {
+        return taskMapper.mapToListTaskDto(taskService.getEntitiesByAuthorId(page, authorId));
+    }
+
+    @Override
+    public List<TaskDto> getTasksByExecutorId(Pageable page, UUID executorId) {
+        return taskMapper.mapToListTaskDto(taskService.getEntitiesByExecutorId(page, executorId));
     }
 }

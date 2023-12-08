@@ -43,6 +43,7 @@ public class UserFacadeImpl implements UserFacade {
     public UserDto updateDto(UserDto dto) {
         User user = userService.getEntityById(dto.getId());
         userMapper.updateUserFromDto(dto, user);
+        user = userService.updateEntity(user);
         return userMapper.mapToUserDto(user);
     }
 }

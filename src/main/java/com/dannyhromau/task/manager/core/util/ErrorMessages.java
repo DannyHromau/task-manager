@@ -8,6 +8,7 @@ public enum ErrorMessages {
     WRONG_AUTHENTICATION_MESSAGE("Cannot authorize : check input data or unblock the user"),
     WRONG_TOKEN_MESSAGE("Wrong token"),
     FORBIDDEN_STATUS_MESSAGE("Permission denied : no such authorities"),
+    EXISTING_EMAIL_MESSAGE("User with email : %s already exists"),
     NULLABLE_ID_MESSAGE("The given id must not be null");
     public final String label;
 

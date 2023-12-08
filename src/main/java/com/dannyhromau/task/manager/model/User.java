@@ -22,6 +22,7 @@ public class User extends BaseEntity {
     private List<Task> receivedTaskList;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Comment> commentList;
+
     public User() {
     }
 

@@ -24,4 +24,8 @@ public interface TaskService extends BaseService<Task> {
 
     @Override
     Task updateEntity(Task entity);
+
+    List<Task> getEntitiesByAuthorId(Pageable page, UUID authorId);
+
+    List<Task> getEntitiesByExecutorId(Pageable page, UUID executorId);
 }

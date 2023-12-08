@@ -38,18 +38,24 @@ public class RestExceptionHandler {
     @ExceptionHandler({SQLException.class})
     protected ResponseEntity<ErrorMessageDto> dbProblemsHandler(Exception e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ErrorMessageDto(e.getMessage()));
     }
 
     @ExceptionHandler({UnAuthorizedException.class})
     protected ResponseEntity<ErrorMessageDto> unauthorizedHandler(Exception e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorMessageDto(e.getMessage()));
     }
 
     @ExceptionHandler({ForbiddenException.class})
     protected ResponseEntity<ErrorMessageDto> forbiddenHandler(Exception e) {
         log.error(e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(new ErrorMessageDto(e.getMessage()));
     }
 }

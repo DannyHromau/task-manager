@@ -8,7 +8,6 @@ import com.dannyhromau.task.manager.repository.UserRepository;
 import com.dannyhromau.task.manager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private static final String ENTITY_NOT_FOUND_MESSAGE = ErrorMessages.ENTITY_NOT_FOUND_MESSAGE.label;
     private static final String NULLABLE_ID_MESSAGE = ErrorMessages.NULLABLE_ID_MESSAGE.label;
     private static final String DUPLICATE_USER_MESSAGE = ErrorMessages.INCORRECT_DATA_MESSAGE.label;
+    private static final String EXISTING_EMAIL_MESSAGE = ErrorMessages.EXISTING_EMAIL_MESSAGE.label;
 
     @Override
     public List<User> getEntities(Pageable pageable) {
@@ -36,8 +36,6 @@ public class UserServiceImpl implements UserService {
         return checkValidData(id);
     }
 
-    @Override
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User addEntity(User user) {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new InvalidDataException(DUPLICATE_USER_MESSAGE);
@@ -46,8 +44,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public UUID deleteEntity(UUID id) {
         userRepository.deleteById(checkValidData(id).getId());
         return id;
@@ -55,6 +51,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateEntity(User user) {
+        User updatableUser = checkValidData(user.getId());
+        if (!updatableUser.getEmail().equals(user.getEmail())){
+            if (userRepository.findByEmail(user.getEmail()) != null){
+                throw new InvalidDataException(EXISTING_EMAIL_MESSAGE);
+            }
+            else {
+                userRepository.save(user);
+            }
+        }
         return userRepository.save(user);
     }
 
@@ -64,7 +69,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new IllegalArgumentException(ENTITY_NOT_FOUND_MESSAGE);
         }
-        return null;
+        return user;
     }
 
     private User checkValidData(UUID id) {

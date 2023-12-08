@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CommentService extends BaseService<Comment> {
+    List<Comment> getEntitiesByAuthorId(Pageable pageable, UUID authorId);
+
     @Override
     List<Comment> getEntities(Pageable pageable);
+
+    List<Comment> getEntitiesByTaskId(Pageable pageable, UUID taskId);
 
     @Override
     Comment getEntityById(UUID id);
@@ -22,4 +26,5 @@ public interface CommentService extends BaseService<Comment> {
 
     @Override
     Comment updateEntity(Comment entity);
+
 }

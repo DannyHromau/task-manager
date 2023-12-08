@@ -24,8 +24,18 @@ public class CommentServiceImpl implements CommentService {
     private static final String NULLABLE_ID_MESSAGE = ErrorMessages.NULLABLE_ID_MESSAGE.label;
 
     @Override
+    public List<Comment> getEntitiesByAuthorId(Pageable pageable, UUID authorId) {
+        return commentRepository.findByAuthor_Id(pageable, authorId);
+    }
+
+    @Override
     public List<Comment> getEntities(Pageable pageable) {
         return commentRepository.findAll(pageable).toList();
+    }
+
+    @Override
+    public List<Comment> getEntitiesByTaskId(Pageable pageable, UUID taskId) {
+        return commentRepository.findByTask_Id(pageable, taskId);
     }
 
     @Override

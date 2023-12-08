@@ -42,17 +42,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwToken authorize(User user) {
-        User authUser;
         try {
-            authUser = userService.getEntityByEmail(user.getEmail());
+            User authUser = userService.getEntityByEmail(user.getEmail());
+            if (authUser != null && encoder.matches(user.getPassword(), authUser.getPassword())) {
+                String accessToken = tokenProvider.createToken(authUser.getId(), authUser.getEmail());
+                String refreshToken = tokenProvider.refreshToken(authUser.getId());
+                return new JwToken(accessToken, refreshToken);
+            } else {
+                throw new UnAuthorizedException(WRONG_AUTHENTICATION_MESSAGE);
+            }
         } catch (Exception e) {
-            authUser = null;
-        }
-        if (authUser != null && encoder.matches(user.getPassword(), authUser.getPassword())) {
-            String accessToken = tokenProvider.createToken(user.getId(), user.getEmail());
-            String refreshToken = tokenProvider.refreshToken(user.getId());
-            return new JwToken(accessToken, refreshToken);
-        } else {
             throw new UnAuthorizedException(WRONG_AUTHENTICATION_MESSAGE);
         }
     }

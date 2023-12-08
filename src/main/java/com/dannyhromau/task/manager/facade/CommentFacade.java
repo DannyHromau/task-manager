@@ -20,6 +20,11 @@ public interface CommentFacade extends BaseFacade<CommentDto> {
     @Override
     UUID deleteDtoById(UUID id);
 
+    List<CommentDto> getCommentsByTaskId(Pageable pageable, UUID taskId);
+
     @Override
     CommentDto updateDto(CommentDto dto);
+
+    List<CommentDto> getCommentsByAuthorId(Pageable pageable, UUID authorId);
+
 }
