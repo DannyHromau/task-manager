@@ -40,7 +40,7 @@ public class UserServiceImplTest {
 
     @Test
     @DisplayName("add user when valid id")
-    void getUserWhenValidId() {
+    void addUserWhenValidId() {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
         when(userRepository.save(user)).thenReturn(user);
         User expectedUser = userService.addEntity(user);

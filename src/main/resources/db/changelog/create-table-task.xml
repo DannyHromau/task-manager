@@ -17,10 +17,10 @@
             <column name="description" type="varchar(500)">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="status_enum">
+            <column name="status" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="priority" type="priority_enum">
+            <column name="priority" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="author_id" type="uuid">

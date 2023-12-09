@@ -19,10 +19,10 @@ public class Task extends BaseEntity {
     @Column(name = "description", nullable = false)
     private String description;
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "status_enum", nullable = false)
+    @Column(name = "status", nullable = false)
     private Status status;
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "priority_enum", nullable = false)
+    @Column(name = "priority", nullable = false)
     private Priority priority;
     @Column(name = "author_id", nullable = false)
     private UUID author_id;

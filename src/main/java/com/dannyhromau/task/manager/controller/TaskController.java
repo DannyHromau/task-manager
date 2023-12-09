@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/task")
-@Tag(name = "Comment service", description = "Comment controller")
+@Tag(name = "Task service", description = "Task controller")
 @ApiResponse(responseCode = "200", description = "Successful operation")
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content)
 @ApiResponse(responseCode = "404", description = "Not found")

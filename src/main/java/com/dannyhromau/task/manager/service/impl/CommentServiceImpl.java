@@ -22,6 +22,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private static final String ENTITY_NOT_FOUND_MESSAGE = ErrorMessages.ENTITY_NOT_FOUND_MESSAGE.label;
     private static final String NULLABLE_ID_MESSAGE = ErrorMessages.NULLABLE_ID_MESSAGE.label;
+    private static final String INCORRECT_DATA_MESSAGE = ErrorMessages.INCORRECT_DATA_MESSAGE.label;
 
     @Override
     public List<Comment> getEntitiesByAuthorId(Pageable pageable, UUID authorId) {
@@ -45,7 +46,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment addEntity(Comment comment) {
-       return commentRepository.save(comment);
+        if (comment.getValue().isBlank()) {
+            throw new InvalidDataException(INCORRECT_DATA_MESSAGE);
+        }
+        return commentRepository.save(comment);
     }
 
     @Override
