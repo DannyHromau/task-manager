@@ -46,7 +46,7 @@ public class TaskFacadeImpl implements TaskFacade {
     public TaskDto updateDto(TaskDto dto) {
         Task task = taskService.getEntityById(dto.getId());
         taskMapper.updateTaskFromDto(dto, task);
-        return taskMapper.mapToTaskDto(task);
+        return taskMapper.mapToTaskDto(taskService.updateEntity(task));
     }
 
     @Override

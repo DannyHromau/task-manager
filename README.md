@@ -57,4 +57,10 @@ Tables, fields, keys and indexes creates by liquibase changelog files.
     - /v3/api-docs/** remove or comment this pattern
  ```
 
+## Docker
+1. You can create your custom image using the command  `docker build -t <image name>` .
+2. If You want to change default docker properties, edit Dockerfile file located in the project folder 
+3. Running the container for example `docker run --name <conatiner name> -p 8081:8081 <image name name>`
+Note: successful running the container depends on another infrastructure (working docker network, connection with db and other)
+
 Hope You enjoy!
